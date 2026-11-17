@@ -1,0 +1,85 @@
+.bottom-tabs {
+  position: fixed;
+  z-index: 30;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: stretch;
+  height: 102rpx;
+  padding-bottom: env(safe-area-inset-bottom);
+  border-top: 2rpx solid #e7edf4;
+  background: #fff;
+  color: #536981;
+}
+
+button.bottom-tab {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  min-width: 0;
+  margin: 0;
+  padding: 8rpx 0 13rpx;
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
+  background: transparent;
+  color: inherit;
+  font-size: 21rpx;
+  font-weight: 550;
+  line-height: 1.35;
+}
+
+button.bottom-tab::after {
+  border: 0;
+}
+
+button.bottom-tab--selected {
+  color: #173d65;
+  font-weight: 750;
+}
+
+.tab-icon {
+  display: block;
+  width: 54rpx;
+  height: 54rpx;
+  margin-bottom: 2rpx;
+}
+
+.publish-badge {
+  display: flex;
+  flex: none;
+  justify-content: center;
+  align-items: center;
+  width: 88rpx;
+  height: 88rpx;
+  margin-bottom: 3rpx;
+  box-sizing: border-box;
+  border: 5rpx solid #fff;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 3rpx 15rpx rgba(23, 61, 101, 0.2);
+}
+
+.publish-logo {
+  position: relative;
+  overflow: hidden;
+  width: 73rpx;
+  height: 73rpx;
+  border-radius: 50%;
+}
+
+/* Frame the round seal within the school's official reference image. */
+.publish-logo-sheet {
+  position: absolute;
+  top: -21.5rpx;
+  left: -15rpx;
+  width: 104rpx;
+  height: 149rpx;
+}
+
+.bottom-tab--selected .publish-badge {
+  border-color: #e1ebf6;
+}

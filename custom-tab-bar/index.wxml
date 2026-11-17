@@ -1,0 +1,13 @@
+<view class="bottom-tabs" aria-label="底部导航">
+  <button wx:for="{{tabs}}" wx:key="route" class="bottom-tab {{selectedRoute === item.route ? 'bottom-tab--selected' : ''}}"
+    bindtap="switchTab" data-route="{{item.route}}" aria-pressed="{{selectedRoute === item.route}}">
+    <view wx:if="{{item.icon === 'publish'}}" class="publish-badge">
+      <view class="publish-logo" aria-hidden="true">
+        <image class="publish-logo-sheet" src="/images/whut-emblem.png" mode="scaleToFill" />
+      </view>
+    </view>
+    <image wx:else class="tab-icon"
+      src="/images/icons/alumni-{{item.icon}}{{selectedRoute === item.route ? '-active' : ''}}.png" aria-hidden="true" />
+    <text class="tab-label">{{item.label}}</text>
+  </button>
+</view>

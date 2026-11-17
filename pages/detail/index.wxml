@@ -1,9 +1,71 @@
-<cloud-template-guide />
-<view class="detail_page">
-  <view class="detail_title">{{article.sub_title||article.title}}</view>
-  <view class="detail_time">{{article.time}}</view>
-  <view class="detail_image">
-    <image mode="widthfix" src="{{article.detail_pic||article.picture || article.subPic}}"></image>
+<view wx:if="{{loading && !post}}" class="screen"><view class="surface empty">正在加载信息…</view></view>
+<view wx:elif="{{loadError}}" class="screen">
+  <view class="surface empty">
+    <view class="empty-title">暂时无法读取信息</view>
+    <button class="empty-action" size="mini" bindtap="reloadPost">重试</button>
   </view>
-  <rich-text class="detail_cont" nodes="{{article.header || article.content || article.description }}"></rich-text>
+</view>
+<view wx:elif="{{post}}" class="screen screen--fixed-actions">
+  <view class="surface detail-header">
+    <view class="detail-top">
+      <text class="pill pill--{{post.kind}}">{{post.label}}</text>
+      <text class="detail-validity">{{post.expired ? '已到期' : post.own ? '我发布的' : post.validity}}</text>
+    </view>
+    <view class="detail-title">{{post.title}}</view>
+    <text class="detail-meta">{{post.district === '全上海' ? post.district : '上海 · ' + post.district}} · {{post.context}}</text>
+  </view>
+
+  <view wx:if="{{post.own && !post.expired}}" class="surface request-status">
+    <view class="request-status-title">{{usingCloud ? '发布成功' : '已通过模拟审核'}}</view>
+    <view class="request-status-note">{{usingCloud ? '这条信息已在校友广场展示。' : '这条信息已经出现在本机的校友广场。'}}</view>
+  </view>
+
+  <view wx:if="{{contactRequest}}" class="surface request-status">
+    <view class="request-status-title">联系申请已提交</view>
+    <view class="request-status-note">{{contactRequest.status === 'accepted' ? '对方已同意联系。' : contactRequest.status === 'declined' ? '对方已拒绝申请。' : '等待对方处理。'}}</view>
+    <text class="request-message">{{contactRequest.message}}</text>
+  </view>
+
+  <view class="surface detail-section">
+    <view class="section-title">{{post.own ? '基本信息' : post.kind === 'opportunity' ? '岗位信息' : '求助信息'}}</view>
+    <view class="fact-grid">
+      <view wx:for="{{post.facts}}" wx:key="label" class="fact">
+        <view class="fact-label">{{item.label}}</view>
+        <view class="fact-value">{{item.value}}</view>
+      </view>
+    </view>
+    <view class="section-title description-title">{{post.kind === 'opportunity' ? '机会介绍' : '详细说明'}}</view>
+    <text class="description">{{post.description}}</text>
+  </view>
+
+  <view class="surface detail-section">
+    <view class="section-title">发布校友</view>
+    <view class="author">
+      <view class="author-avatar author-avatar--{{post.kind}}" aria-hidden="true">{{post.author.initial}}</view>
+      <view class="author-info">
+        <view class="author-name-line">
+          <text class="author-name">{{post.author.name}}</text>
+          <text class="author-verified">{{post.own ? (usingCloud ? '我发布的' : '演示账号') : (usingCloud ? '社区成员' : '已认证校友 · 模拟')}}</text>
+        </view>
+        <view class="author-profile">{{post.author.profile}}</view>
+        <view class="author-profile">{{post.author.role}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="fixed-actions detail-actions">
+    <button wx:if="{{post.own}}" class="primary-button" bindtap="openHome">返回校友广场</button>
+    <button wx:elif="{{post.expired}}" class="primary-button" disabled>信息已到期</button>
+    <block wx:else>
+    <button class="favorite-button" aria-pressed="{{saved}}" bindtap="savePost" disabled="{{loading || saving}}">{{saved ? '已收藏' : '收藏'}}</button>
+    <button wx:if="{{contactRequest}}" class="primary-button" disabled>{{contactRequest.status === 'accepted' ? '已同意联系' : contactRequest.status === 'declined' ? '申请已拒绝' : '等待对方处理'}}</button>
+    <button wx:else class="primary-button" hover-class="primary-button--pressed" bindtap="openContact" disabled="{{loading}}">申请联系</button>
+    </block>
+  </view>
+</view>
+<view wx:else class="screen">
+  <view class="surface empty">
+    <view class="empty-title">找不到这条信息</view>
+    <navigator url="/pages/index/index" open-type="switchTab" class="back-link">返回首页</navigator>
+  </view>
 </view>

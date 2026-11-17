@@ -1,72 +1,82 @@
-import { fetchIndexData } from '../../services/index/index';
-import { fetchSceneData} from '../../services/scene/index';
-import { fetchNewsData } from '../../services/news/index';
+import { loadFeed } from '../../services/alumni/data';
+import { categories, filterPosts, postFilters } from '../../services/alumni/posts';
+import { selectAlumniTab } from '../../common/alumni-tab';
+
+const HOME_PREVIEW_SIZE = 3;
+const categoryIcons = ['job', 'rocket', 'career', 'life', 'social'];
 
 Page({
   data: {
-    showUploadTip:false,
-    bannerList:[],
-    productAbilityList:[],
-    applicationScene:[],
-    newsList:[],
-    partnersList:[]
+    categories: categories.map((name, index) => ({
+      name,
+      icon: '/images/icons/category-' + categoryIcons[index] + '.png',
+    })),
+    filters: postFilters,
+    selectedKind: 'all',
+    category: '',
+    query: '',
+    hasFilters: false,
+    showAll: false,
+    canExpand: false,
+    posts: [],
+    feedLoading: true,
+    feedError: '',
   },
-  async onLoad() {
-    await this.getRequestList();
-  },
-  // 首页数据请求
-  async getRequestList(){
-    try {
-      wx.showTabBar();
-      wx.showLoading({
-        title: '加载中',
-      })
-      const res = await fetchIndexData({pageSize:1});
-      const res1 = await fetchSceneData();
-      const res2 = await fetchNewsData({pageSize:3});
-      const {index_show,function_show,cooperation} = res?.[0];
 
-      this.setData({
-        showUploadTip: true,
-        bannerList:index_show,
-        productAbilityList:function_show,
-        partnersList: cooperation,
-        applicationScene:res1,
-        newsList: res2
-      });
-    } catch (error) {
-      wx.showToast({
-        title: error?.message || '页面请求失败，请刷新页面',
-        icon: 'error',
-        duration: 2000
-      })   
-    } finally {
-      wx.hideLoading();  
-    }   
+  onShow() {
+    selectAlumniTab(this);
+    this.syncFeed();
   },
-  // 跳转最新动态列表页面
-  onGoNews(){
-    wx.navigateTo({
-      url: '/pages/news/index'
-    })
-  },
-  // 跳转详情页
-  async goDetail(event){
+
+  async syncFeed() {
+    const revision = (this.feedRevision || 0) + 1;
+    this.feedRevision = revision;
+    this.setData({ feedLoading: true, feedError: '' });
     try {
-      const id = event.currentTarget.dataset.id;
-      const title = event.currentTarget.dataset.title;
-      if(!id){
-        throw new Error("id获取失败")
-      }
-      wx.navigateTo({
-        url:`/pages/detail/index?type=scene&id=${id}&title=${title}`
-      })
+      const feed = await loadFeed();
+      if (this.feedRevision !== revision) return;
+      this.feed = feed;
+      this.refresh({ feedLoading: false });
     } catch (error) {
-      wx.showToast({
-        title: error.message || '页面跳转失败',
-        icon: 'error',
-        duration: 2000
-      }) 
+      if (this.feedRevision !== revision) return;
+      this.setData({ feedLoading: false, feedError: error.message || '暂时无法读取信息' });
     }
-  }
+  },
+
+  refresh(changes = {}) {
+    const { selectedKind, category, query, showAll } = { ...this.data, ...changes };
+    const hasFilters = selectedKind !== 'all' || Boolean(category || query.trim());
+    const matches = filterPosts(this.feed || [], { kind: selectedKind, category, query });
+    this.setData({
+      ...changes,
+      hasFilters,
+      posts: showAll || hasFilters ? matches : matches.slice(0, HOME_PREVIEW_SIZE),
+      canExpand: matches.length > HOME_PREVIEW_SIZE,
+    });
+  },
+
+  onSearchInput(event) {
+    this.refresh({ query: event.detail.value });
+  },
+
+  clearSearch() {
+    this.refresh({ query: '' });
+  },
+
+  selectCategory(event) {
+    const category = event.currentTarget.dataset.category;
+    this.refresh({ category: this.data.category === category ? '' : category, showAll: false });
+  },
+
+  selectFilter(event) {
+    this.refresh({ selectedKind: event.currentTarget.dataset.kind, showAll: false });
+  },
+
+  resetFilters() {
+    this.refresh({ category: '', query: '', selectedKind: 'all', showAll: false });
+  },
+
+  toggleAll() {
+    this.refresh({ showAll: !this.data.showAll });
+  },
 });

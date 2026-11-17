@@ -1,0 +1,24 @@
+.verify-banner {
+  margin-bottom: 20rpx;
+  padding: 24rpx 26rpx;
+  border-color: #d6e4f5;
+  background: #eaf2fb;
+}
+
+.verify-title,
+.verify-record {
+  margin-bottom: 6rpx;
+  color: #173d65;
+  font-size: 29rpx;
+  font-weight: 700;
+}
+
+.verify-note {
+  color: #536981;
+  font-size: 25rpx;
+  line-height: 1.6;
+}
+
+.verify-submit {
+  margin-top: 24rpx;
+}

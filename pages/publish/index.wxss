@@ -1,0 +1,50 @@
+.publish-option {
+  display: block;
+  margin-bottom: 20rpx;
+  padding: 26rpx;
+}
+
+.publish-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.publish-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 78rpx;
+  height: 78rpx;
+  border-radius: 50%;
+  color: #23609a;
+  background: #dce9f8;
+  font-size: 40rpx;
+  font-weight: 700;
+}
+
+.publish-icon--gold,
+.publish-pill--gold {
+  color: #805316;
+  background: #f5ead3;
+}
+
+.publish-title {
+  margin: 18rpx 0 7rpx;
+  font-size: 36rpx;
+  font-weight: 750;
+}
+
+.publish-description {
+  color: #536981;
+  font-size: 26rpx;
+  line-height: 1.6;
+}
+
+.publish-link {
+  margin-top: 17rpx;
+  color: #173d65;
+  text-align: right;
+  font-size: 26rpx;
+  font-weight: 700;
+}

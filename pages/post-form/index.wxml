@@ -1,0 +1,59 @@
+<view class="screen">
+  <block wx:if="{{kind}}">
+    <view class="post-form-heading">
+      <view class="page-title">{{kind === 'opportunity' ? '填写资源信息' : '填写需求信息'}}</view>
+      <text class="pill pill--{{kind}}">{{kind === 'opportunity' ? '资源' : '需求'}}</text>
+    </view>
+    <form bindsubmit="submit">
+      <view class="surface form-card">
+        <view class="field">
+          <view class="field-label">分类<text class="field-required">*</text></view>
+          <picker range="{{categories}}" value="{{categoryIndex}}" data-field="categoryIndex" bindchange="selectField">
+            <button class="field-control field-select">{{categories[categoryIndex]}} <text class="field-arrow">⌄</text></button>
+          </picker>
+        </view>
+        <view class="field">
+          <label for="post-title" class="field-label">信息标题<text class="field-required">*</text></label>
+          <input id="post-title" class="field-control" name="title" maxlength="40"
+            placeholder="{{kind === 'opportunity' ? '例如：上海团队招前端实习生' : '例如：想请校友帮忙看看简历'}}" />
+        </view>
+        <view class="field">
+          <label for="post-description" class="field-label">详细介绍<text class="field-required">*</text></label>
+          <textarea id="post-description" class="field-control field-textarea" name="description" maxlength="600"
+            placeholder="{{kind === 'opportunity' ? '说明资源内容、适用对象和申请条件。' : '说说你的情况，以及希望校友怎么帮你。'}}"
+            bindinput="onDescriptionInput" />
+          <view class="form-count">{{descriptionLength}} / 600</view>
+        </view>
+        <view class="field field-pair">
+          <view>
+            <view class="field-label">行业</view>
+            <picker range="{{industries}}" value="{{industryIndex}}" data-field="industryIndex" bindchange="selectField">
+              <button class="field-control field-select">
+                {{industries[industryIndex]}} <text class="field-arrow">⌄</text>
+              </button>
+            </picker>
+          </view>
+          <view>
+            <view class="field-label">地区<text class="field-required">*</text></view>
+            <picker range="{{districts}}" value="{{districtIndex}}" data-field="districtIndex" bindchange="selectField">
+              <button class="field-control field-select">{{districts[districtIndex]}} <text class="field-arrow">⌄</text></button>
+            </picker>
+          </view>
+        </view>
+        <view class="field">
+          <view class="field-label">有效期<text class="field-required">*</text></view>
+          <picker range="{{validityOptions}}" value="{{validityIndex}}" data-field="validityIndex" bindchange="selectField">
+            <button class="field-control field-select">{{validityOptions[validityIndex]}} <text class="field-arrow">⌄</text></button>
+          </picker>
+        </view>
+      </view>
+      <view class="form-note">{{usingCloud ? '发布后，其他用户可在校友广场看到这条信息。' : '体验版会自动通过模拟审核，发布内容仅保存在本机。'}}</view>
+      <view wx:if="{{error}}" class="form-error" aria-role="alert">{{error}}</view>
+      <button class="primary-button" form-type="submit" disabled="{{submitting}}">{{submitting ? '提交中…' : usingCloud ? '发布' : '提交审核'}}</button>
+    </form>
+  </block>
+  <view wx:else class="surface empty">
+    <view class="empty-title">请先选择发布类型</view>
+    <navigator class="empty-action" url="/pages/publish/index" open-type="switchTab">返回发布页</navigator>
+  </view>
+</view>

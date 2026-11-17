@@ -1,0 +1,118 @@
+.profile-card {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  margin-bottom: 20rpx;
+  padding: 30rpx 26rpx;
+  border-radius: 28rpx;
+  background: linear-gradient(125deg, #123455, #32689b);
+  color: #fff;
+}
+
+.profile-avatar {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 90rpx;
+  height: 90rpx;
+  border-radius: 50%;
+  background: #dbe9f7;
+  color: #173d65;
+  font-size: 37rpx;
+  font-weight: 700;
+}
+
+.profile-identity {
+  min-width: 0;
+}
+
+.profile-name {
+  margin-bottom: 6rpx;
+  font-size: 34rpx;
+  font-weight: 750;
+}
+
+.profile-bio {
+  color: #e2edf9;
+  font-size: 23rpx;
+  line-height: 1.55;
+}
+
+.profile-menu {
+  padding: 0 24rpx;
+}
+
+.profile-row,
+.profile-heading,
+.profile-empty,
+.application-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.profile-row {
+  min-height: 84rpx;
+  color: #536981;
+  font-size: 24rpx;
+}
+
+.profile-row + .profile-row {
+  border-top: 2rpx solid #e7edf4;
+}
+
+button.profile-row {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.profile-row-label {
+  color: #16263b;
+  font-size: 27rpx;
+  font-weight: 650;
+}
+
+.profile-heading {
+  margin: 29rpx 0 14rpx;
+}
+
+.profile-title {
+  font-size: 33rpx;
+  font-weight: 750;
+}
+
+.profile-note,
+.profile-empty {
+  color: #536981;
+  font-size: 24rpx;
+}
+
+.profile-empty {
+  padding: 24rpx;
+}
+
+.profile-empty navigator {
+  flex: none;
+  color: #173d65;
+  font-weight: 650;
+}
+
+.application {
+  display: block;
+  margin-bottom: 14rpx;
+  padding: 21rpx 24rpx;
+}
+
+.application-title {
+  margin-top: 10rpx;
+  font-size: 28rpx;
+  font-weight: 700;
+  line-height: 1.4;
+}

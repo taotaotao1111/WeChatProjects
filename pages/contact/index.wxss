@@ -1,0 +1,75 @@
+.contact-context,
+.message-card {
+  margin-bottom: 20rpx;
+  padding: 25rpx 28rpx;
+}
+
+.contact-context {
+  border-color: #d6e4f5;
+  background: #edf4fc;
+}
+
+.contact-recipient {
+  margin-bottom: 4rpx;
+  color: #173d65;
+  font-size: 31rpx;
+  font-weight: 700;
+}
+
+.contact-post {
+  color: #536981;
+  font-size: 25rpx;
+  line-height: 1.5;
+}
+
+.message-label {
+  display: block;
+  margin-bottom: 15rpx;
+  font-size: 29rpx;
+  font-weight: 650;
+}
+
+.message-input {
+  display: block;
+  width: 100%;
+  height: 205rpx;
+  padding: 19rpx 21rpx;
+  box-sizing: border-box;
+  border-radius: 16rpx;
+  background: #f0f4f9;
+  font-size: 28rpx;
+  line-height: 1.55;
+}
+
+.message-count {
+  margin-top: 10rpx;
+  color: #586e85;
+  font-size: 22rpx;
+  text-align: right;
+}
+
+.message-placeholder {
+  color: #64758a;
+}
+
+.contact-note,
+.contact-error {
+  margin: 0 0 22rpx;
+  padding: 0 4rpx;
+  color: #536981;
+  font-size: 24rpx;
+  line-height: 1.65;
+}
+
+.contact-error {
+  color: #ac3535;
+}
+
+button.return-button {
+  margin-top: 24rpx;
+}
+
+.back-link {
+  margin-top: 14rpx;
+  color: #23558a;
+}

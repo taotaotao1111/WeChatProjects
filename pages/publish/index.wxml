@@ -1,0 +1,22 @@
+<view class="screen tab-screen">
+  <view class="page-title">发布校友信息</view>
+  <view class="page-intro">你今天想分享什么，或需要什么帮助？</view>
+  <navigator class="surface publish-option" url="/pages/post-form/index?kind=opportunity">
+    <view class="publish-top">
+      <view class="publish-icon">＋</view>
+      <text class="pill pill--opportunity">资源提供</text>
+    </view>
+    <view class="publish-title">我有资源</view>
+    <view class="publish-description">分享内推机会、职业经验或合作资源。</view>
+    <view class="publish-link">发布资源 →</view>
+  </navigator>
+  <navigator class="surface publish-option" url="/pages/post-form/index?kind=request">
+    <view class="publish-top">
+      <view class="publish-icon publish-icon--gold">?</view>
+      <text class="pill publish-pill--gold">需求发布</text>
+    </view>
+    <view class="publish-title">我有需求</view>
+    <view class="publish-description">找工作、找伙伴，或请校友帮个忙。</view>
+    <view class="publish-link">发布需求 →</view>
+  </navigator>
+</view>

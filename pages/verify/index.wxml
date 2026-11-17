@@ -1,0 +1,44 @@
+<view class="screen">
+  <view class="surface verify-banner">
+    <view class="verify-title">{{certification ? '认证申请待审核' : '提交校友资料'}}</view>
+    <view class="verify-note">{{usingCloud ? '认证资料仅供本人查看和管理员审核。' : '当前为模拟体验，请用示例信息填写。资料仅保存在本机。'}}</view>
+  </view>
+
+  <view wx:if="{{certification}}" class="surface form-card">
+    <view class="verify-record">{{certification.name}} · {{certification.college}}</view>
+    <view class="verify-note">{{certification.major}} · {{certification.year}} 届 · {{certification.degree}}</view>
+    <navigator url="/pages/profile/index" open-type="switchTab" class="empty-action">返回我的</navigator>
+  </view>
+  <form wx:else bindsubmit="submit">
+    <view class="surface form-card">
+      <view class="field">
+        <label for="verify-name" class="field-label">真实姓名<text class="field-required">*</text></label>
+        <input id="verify-name" class="field-control" name="name" maxlength="20" placeholder="例如：李同学" />
+      </view>
+      <view class="field">
+        <label for="verify-college" class="field-label">毕业学院<text class="field-required">*</text></label>
+        <input id="verify-college" class="field-control" name="college" maxlength="40" placeholder="例如：计算机与人工智能学院" />
+      </view>
+      <view class="field">
+        <label for="verify-major" class="field-label">所学专业<text class="field-required">*</text></label>
+        <input id="verify-major" class="field-control" name="major" maxlength="40" placeholder="例如：计算机科学与技术" />
+      </view>
+      <view class="field field-pair">
+        <view>
+          <label for="verify-year" class="field-label">毕业年份<text class="field-required">*</text></label>
+          <input id="verify-year" class="field-control" name="year" maxlength="4" type="number" placeholder="例如：2020" />
+        </view>
+        <view>
+          <view class="field-label">学历<text class="field-required">*</text></view>
+          <picker range="{{degreeOptions}}" value="{{degreeIndex}}" bindchange="selectDegree">
+            <button class="field-control field-select">{{degreeOptions[degreeIndex]}} <text class="field-arrow">⌄</text></button>
+          </picker>
+        </view>
+      </view>
+    </view>
+    <view class="verify-submit">
+      <view wx:if="{{error}}" class="form-error" aria-role="alert">{{error}}</view>
+      <button class="primary-button" form-type="submit" disabled="{{loading || submitting}}">提交认证</button>
+    </view>
+  </form>
+</view>

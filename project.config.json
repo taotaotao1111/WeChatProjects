@@ -46,7 +46,7 @@
     "useCompilerPlugins": false
   },
   "appid": "wx2b016d91a60b8038",
-  "projectname": "tcb-official-website",
+  "projectname": "武理沪联",
   "libVersion": "3.7.3",
   "cloudfunctionTemplateRoot": "cloudfunctionTemplate/",
   "cloudfunctionRoot": "cloudfunctions/",
@@ -60,27 +60,15 @@
           "scene": null
         },
         {
-          "name": "解决方案",
-          "pathName": "pages/solution/index",
-          "query": "",
-          "scene": null
-        },
-        {
-          "name": "联系我们",
-          "pathName": "pages/aboutUs/index",
-          "query": "",
-          "scene": null
-        },
-        {
-          "name": "最新动态",
-          "pathName": "pages/news/index",
-          "query": "",
-          "scene": null
-        },
-        {
-          "name": "文章详情",
+          "name": "内推详情",
           "pathName": "pages/detail/index",
-          "query": "",
+          "query": "id=java-referral",
+          "scene": null
+        },
+        {
+          "name": "申请联系",
+          "pathName": "pages/contact/index",
+          "query": "id=java-referral",
           "scene": null
         }
       ]

@@ -1,55 +1,70 @@
-<cloud-template-guide />
-<!-- banner -->
-<swiper wx:if="{{bannerList.length >0}}" class="poster" indicator-dots autoplay>
-  <swiper-item wx:for="{{bannerList}}" wx:key="index">
-    <image src="{{item}}"></image>
-  </swiper-item>
-</swiper>
+<view class="screen tab-screen home">
+  <view class="home-brand">校友广场</view>
 
-<!-- 产品能力 -->
-<view wx:if="{{productAbilityList.length >0}}"  class="template">
-  <view class="template_list">
-    <view class="template_item" wx:for="{{productAbilityList}}" wx:key="index">
-      <image src="{{item.icon}}"></image>
-      <text>{{item.text}}</text>
+  <view class="search surface">
+    <view class="search-icon"></view>
+    <input class="search-input" type="text" maxlength="60" confirm-type="search"
+      value="{{query}}" placeholder="搜索资源、需求或地区" placeholder-class="search-placeholder"
+      bindinput="onSearchInput" aria-label="搜索资源、需求或地区" />
+    <button wx:if="{{query}}" class="search-clear" bindtap="clearSearch" aria-label="清除搜索">×</button>
+  </view>
+
+  <view class="hero">
+    <image class="hero-image" src="/images/shanghai-hero.jpg" mode="aspectFill" />
+    <view class="hero-content">
+      <view class="hero-location"><view class="location-dot"></view>上海 · 武理校友</view>
+      <view class="hero-title"><view>在上海，</view><view>和校友搭把手。</view></view>
+      <view class="hero-caption">内推、求职与职业交流</view>
     </view>
   </view>
-</view>
 
-<!-- 应用场景 -->
-<view wx:if="{{applicationScene.length >0}}" class="common" style="padding-right: 40rpx;">
-  <view class="common_title">应用场景</view>
-  <scroll-view class="scene_list" scroll-x="true" enable-flex>
-    <view wx:for="{{applicationScene}}" wx:key="index" class="scene_item" style="background-image: url({{item.backgroud_pic}});" catch:tap="goDetail" data-id="{{item._id}}" data-title="{{item.title}}">
-      <view class="scene_title">{{item.title}}</view> 
-      <view class="scene_cont">{{item.sub_title}}</view> 
-    </view>
-  </scroll-view>
-</view>
-
-<!-- 最新动态 -->
-<view wx:if="{{newsList.length >0}}" class="common">
-  <view class="common_title">
-    <text>最新动态</text>
-    <view class="news_more" bind:tap="onGoNews">
-      <text>更多</text>
-      <image src="../../images/more.png"></image>
-    </view>
+  <view class="home-categories" aria-label="浏览分类">
+    <button wx:for="{{categories}}" wx:key="name" class="home-category"
+      data-category="{{item.name}}" bindtap="selectCategory" aria-pressed="{{category === item.name}}">
+      <view class="category-icon {{category === item.name ? 'category-icon--active' : ''}}">
+        <image class="category-image" src="{{item.icon}}" aria-hidden="true" />
+      </view>
+      <text class="category-name">{{item.name}}</text>
+    </button>
   </view>
-  <view class="news_list">
-    <news-list wx:for="{{newsList}}" wx:key="index" title="{{item.title}}" time="{{item.time}}" image="{{item.picture}}" id="{{item._id}}" number="{{index}}"></news-list>
+
+  <view class="latest-heading">
+    <text class="latest-title">{{hasFilters ? '筛选结果' : '最新发布'}}</text>
+    <button wx:if="{{hasFilters}}" size="mini" class="latest-link latest-link--reset" hover-class="latest-link--pressed"
+      bindtap="resetFilters" aria-label="清除筛选">
+      <text class="reset-icon" aria-hidden="true">↺</text>
+      <text>重置</text>
+    </button>
+    <button wx:elif="{{canExpand}}" size="mini" class="latest-link" bindtap="toggleAll">{{showAll ? '收起' : '查看全部 ›'}}</button>
+  </view>
+  <view class="filters" aria-label="信息类型">
+    <button wx:for="{{filters}}" wx:key="key" data-kind="{{item.key}}" bindtap="selectFilter"
+      class="filter {{selectedKind === item.key ? 'filter--active' : ''}}"
+      aria-pressed="{{selectedKind === item.key}}">{{item.label}}</button>
+  </view>
+
+  <view wx:if="{{feedLoading && !posts.length}}" class="surface empty">正在加载校友信息…</view>
+  <view wx:elif="{{feedError}}" class="surface empty">
+    <view class="empty-title">{{feedError}}</view>
+    <button size="mini" class="empty-action" bindtap="syncFeed">重试</button>
+  </view>
+  <view wx:elif="{{posts.length}}" class="feed">
+    <navigator wx:for="{{posts}}" wx:key="id" class="post surface" url="/pages/detail/index?id={{item.id}}"
+      hover-class="post--pressed">
+      <view class="post-top">
+        <text class="pill pill--{{item.kind}}">{{item.label}}</text>
+        <text class="post-validity">{{item.own ? '我发布的' : item.validity}}</text>
+      </view>
+      <view class="post-title">{{item.title}}</view>
+      <view class="post-summary">{{item.summary}}</view>
+      <view class="post-bottom">
+        <text class="post-meta">{{item.district}} · {{item.context}}</text>
+        <text class="post-arrow" aria-hidden="true">›</text>
+      </view>
+    </navigator>
+  </view>
+  <view wx:else class="surface empty">
+    <view class="empty-title">暂无相关信息</view>
+    <text>可以换个关键词或分类看看。</text>
   </view>
 </view>
-
-<!-- 合作伙伴 -->
-<view wx:if="{{partnersList.length >0}}" class="common">
-  <view class="common_title">合作伙伴</view>
-  <view class="partners_list">
-    <view wx:for="{{partnersList}}" wx:key="index" class="partners_item">
-      <image src="{{item.pic}}"></image>
-    </view>
-  </view>
-</view>
-
-<!-- 版本信息 -->
-<version-info wx:if="{{partnersList.length >0}}"></version-info>

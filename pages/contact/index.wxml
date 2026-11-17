@@ -1,0 +1,33 @@
+<view wx:if="{{loading}}" class="screen"><view class="surface empty">正在加载信息…</view></view>
+<view wx:elif="{{post}}" class="screen">
+  <view class="surface contact-context">
+    <view class="contact-recipient">联系 {{post.author.name}}</view>
+    <view class="contact-post">{{post.title}}</view>
+  </view>
+
+  <view wx:if="{{submitted}}" class="surface empty">
+    <view class="empty-title">你已提交联系申请</view>
+    <text>可以返回详情查看申请状态。</text>
+    <button class="primary-button return-button" bindtap="returnToDetail">返回详情</button>
+  </view>
+  <form wx:else bindsubmit="submit">
+    <view class="surface message-card">
+      <label class="message-label" for="contact-message">联系说明</label>
+      <textarea id="contact-message" class="message-input" name="message" value="{{message}}"
+        maxlength="{{maxLength}}" placeholder="简单介绍自己，说说你想了解什么。"
+        placeholder-class="message-placeholder" bindinput="onMessageInput" />
+      <view class="message-count">{{messageLength}} / {{maxLength}}</view>
+    </view>
+
+    <view class="contact-note">{{usingCloud ? '联系说明发送给发布者。对方处理后，可在消息中查看结果。' : '当前为模拟体验，申请仅保存在本机。'}}</view>
+    <view wx:if="{{error}}" class="contact-error" aria-role="alert">{{error}}</view>
+    <button class="primary-button" form-type="submit" disabled="{{!canSubmit || submitting}}"
+      hover-class="primary-button--pressed">提交申请</button>
+  </form>
+</view>
+<view wx:else class="screen">
+  <view class="surface empty">
+    <view class="empty-title">{{error || '找不到这条信息'}}</view>
+    <navigator url="/pages/index/index" open-type="switchTab" class="back-link">返回首页</navigator>
+  </view>
+</view>

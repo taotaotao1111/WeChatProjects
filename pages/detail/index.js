@@ -1,39 +1,56 @@
-import { fetchSceneDetail } from '../../services/scene/index';
+import { loadPost, saveFavorite, usingCloud } from '../../services/alumni/data';
 
 Page({
-  /**
-   * 页面的初始数据
-   */
   data: {
-    article:null
+    post: null,
+    contactRequest: null,
+    usingCloud,
+    loading: true,
+    loadError: false,
+    saved: false,
+    saving: false,
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  async onLoad(options) {
-    // 获取页面url search数据
-    const { id, title, type } = options;
-    // 动态设置页面标题
-    wx.setNavigationBarTitle({
-      title: title
-    })
-    await this.getArticle(id,type);
+  onLoad({ id }) {
+    this.postId = id;
   },
 
-  async getArticle(id,type){
+  onShow() {
+    this.reloadPost();
+  },
+
+  async reloadPost() {
+    this.setData({ loading: true, loadError: false });
     try {
-      wx.showLoading({
-        title: '加载中',
-      })
-      const article = await fetchSceneDetail(id,type);
-      this.setData({
-        article
-      })
+      const { post, request, saved } = this.postId ? await loadPost(this.postId) : {};
+      this.setData({ post: post || null, contactRequest: request || null, saved: Boolean(saved) });
     } catch (error) {
-    } finally{
-      // 请求完成关闭loading框
-      wx.hideLoading()
+      this.setData({ loadError: true });
+    } finally {
+      this.setData({ loading: false });
     }
   },
-})
+
+  openHome() {
+    wx.switchTab({ url: '/pages/index/index' });
+  },
+
+  async savePost() {
+    const { post, saved, saving, loading } = this.data;
+    if (!post || saving || loading) return;
+    this.setData({ saving: true });
+    try {
+      this.setData({ saved: await saveFavorite(post.id, !saved) });
+    } catch (error) {
+      wx.showToast({ title: '收藏失败，请重试', icon: 'none' });
+    } finally {
+      this.setData({ saving: false });
+    }
+  },
+
+  openContact() {
+    const { post, contactRequest, loading, loadError } = this.data;
+    if (!post || post.own || post.expired || contactRequest || loading || loadError) return;
+    wx.navigateTo({ url: '/pages/contact/index?id=' + post.id });
+  },
+});

@@ -1,31 +1,207 @@
-/**app.wxss**/
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  box-sizing: border-box;
-} 
-
-button {
-  background: initial;
-}
-
-button:focus{
-  outline: 0;
-}
-
-button::after{
-  border: none;
-}
-
-
 page {
-  background: #F2F4F8;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+  background: #f4f6fa;
+  color: #16263b;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 28rpx;
 }
 
-.news_list {
-  padding: 0 20rpx;
+button::after {
+  border: 0;
+}
+
+.screen {
+  padding: 28rpx 32rpx 48rpx;
+}
+
+.surface {
+  background: #fff;
+  border: 2rpx solid #e7edf4;
+  border-radius: 28rpx;
+  box-shadow: 0 8rpx 24rpx rgba(22, 52, 83, 0.04);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 6rpx 16rpx;
+  border-radius: 100rpx;
+  font-size: 22rpx;
+  line-height: 1.45;
+  font-weight: 600;
+}
+
+.pill--opportunity {
+  background: #e6f5ed;
+  color: #166449;
+}
+
+.pill--request {
+  background: #e9f1fc;
+  color: #23558a;
+}
+
+button.primary-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 88rpx;
+  margin: 0;
+  padding: 16rpx 24rpx;
+  box-sizing: border-box;
+  border: 0;
+  border-radius: 20rpx;
+  background: #173d65;
+  color: #fff;
+  font-size: 30rpx;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+button.primary-button--pressed {
+  background: #102e4d;
+}
+
+button.primary-button[disabled] {
+  background: #e8eff7;
+  color: #486683;
+}
+
+.fixed-actions {
+  position: fixed;
+  z-index: 2;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 18rpx 32rpx 22rpx;
+  padding-bottom: calc(22rpx + env(safe-area-inset-bottom));
+  background: #fff;
+  border-top: 2rpx solid #e7edf4;
+}
+
+.screen--fixed-actions {
+  padding-bottom: 164rpx;
+  padding-bottom: calc(164rpx + env(safe-area-inset-bottom));
+}
+
+.empty {
+  padding: 52rpx 30rpx;
+  color: #536981;
+  text-align: center;
+  line-height: 1.6;
+}
+
+.empty-title {
+  margin-bottom: 8rpx;
+  color: #16263b;
+  font-size: 32rpx;
+  font-weight: 650;
+}
+
+.empty-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 76rpx;
+  margin: 28rpx auto 0;
+  border-radius: 16rpx;
+  background: #edf4fc;
+  color: #173d65;
+  font-weight: 600;
+}
+
+.page-title {
+  color: #16263b;
+  font-size: 42rpx;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+.page-intro {
+  margin: 9rpx 0 26rpx;
+  color: #536981;
+  font-size: 26rpx;
+  line-height: 1.6;
+}
+
+.form-card {
+  padding: 26rpx;
+}
+
+.field + .field {
+  margin-top: 26rpx;
+}
+
+.field-label {
+  display: block;
+  margin-bottom: 10rpx;
+  color: #16263b;
+  font-size: 27rpx;
+  font-weight: 650;
+}
+
+.field-required {
+  margin-left: 5rpx;
+  color: #a84040;
+}
+
+.field-control {
+  display: block;
+  width: 100%;
+  min-height: 74rpx;
+  padding: 16rpx 18rpx;
+  box-sizing: border-box;
+  border-radius: 14rpx;
+  background: #eef3f8;
+  color: #16263b;
+  font-size: 26rpx;
+  line-height: 1.5;
+}
+
+.field-select {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10rpx;
+}
+
+.field-placeholder,
+.field-arrow {
+  color: #5d7085;
+}
+
+.field-textarea {
+  height: 210rpx;
+}
+
+.field-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14rpx;
+}
+
+.form-note {
+  margin: 18rpx 2rpx 24rpx;
+  color: #536981;
+  font-size: 23rpx;
+  line-height: 1.65;
+}
+
+.form-error {
+  margin: 0 0 18rpx;
+  color: #9f3030;
+  font-size: 24rpx;
+}
+
+button.field-select {
+  width: 100%;
+  margin: 0;
+  border: 0;
+  text-align: left;
+  font-weight: 400;
+}
+
+.tab-screen {
+  padding-bottom: 142rpx;
+  padding-bottom: calc(142rpx + env(safe-area-inset-bottom));
 }

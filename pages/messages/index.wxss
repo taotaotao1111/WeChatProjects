@@ -1,0 +1,104 @@
+.message-tabs {
+  display: flex;
+  gap: 6rpx;
+  margin-bottom: 20rpx;
+  padding: 6rpx;
+  border-radius: 20rpx;
+  background: #e8eef5;
+}
+
+button.message-tab {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border-radius: 15rpx;
+  background: transparent;
+  color: #4e647d;
+  font-size: 24rpx;
+  font-weight: 600;
+  line-height: 66rpx;
+}
+
+button.message-tab--active {
+  background: #173d65;
+  color: #fff;
+}
+
+.message-entry {
+  display: block;
+  margin-bottom: 18rpx;
+  padding: 24rpx;
+}
+
+.message-heading,
+.responses {
+  display: flex;
+  align-items: center;
+  gap: 14rpx;
+}
+
+.message-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 66rpx;
+  height: 66rpx;
+  border-radius: 50%;
+  background: #dce9f8;
+  color: #173d65;
+  font-weight: 700;
+}
+
+.message-person {
+  flex: 1;
+}
+
+.message-title {
+  color: #16263b;
+  font-size: 29rpx;
+  font-weight: 700;
+}
+
+.message-meta,
+.response-status {
+  margin-top: 6rpx;
+  color: #536981;
+  font-size: 23rpx;
+}
+
+.message-body {
+  margin-top: 15rpx;
+  padding: 15rpx;
+  border-radius: 12rpx;
+  background: #eef3f8;
+  font-size: 25rpx;
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+.responses {
+  justify-content: flex-end;
+  margin-top: 16rpx;
+}
+
+button.response {
+  margin: 0;
+  padding: 0 20rpx;
+  border-radius: 12rpx;
+  background: #e8eef5;
+  color: #173d65;
+  font-size: 24rpx;
+  line-height: 62rpx;
+}
+
+button.response--primary {
+  background: #173d65;
+  color: #fff;
+}
+
+.response-status {
+  margin-top: 17rpx;
+  text-align: right;
+  font-weight: 700;
+}
