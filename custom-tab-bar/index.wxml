@@ -6,8 +6,12 @@
         <image class="publish-logo-sheet" src="/images/whut-emblem.png" mode="scaleToFill" />
       </view>
     </view>
-    <image wx:else class="tab-icon"
-      src="/images/icons/alumni-{{item.icon}}{{selectedRoute === item.route ? '-active' : ''}}.png" aria-hidden="true" />
+    <view wx:else class="tab-icon-wrap">
+      <image class="tab-icon"
+        src="/images/icons/alumni-{{item.icon}}{{selectedRoute === item.route ? '-active' : ''}}.png" aria-hidden="true" />
+      <text wx:if="{{item.icon === 'messages' && pendingContactCount > 0}}" class="tab-count"
+        aria-label="{{pendingContactCount}} 条待处理申请">{{pendingContactCount > 99 ? '99+' : pendingContactCount}}</text>
+    </view>
     <text class="tab-label">{{item.label}}</text>
   </button>
 </view>

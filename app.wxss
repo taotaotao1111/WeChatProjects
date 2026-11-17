@@ -1,6 +1,8 @@
+@import "./common/dark-page.wxss";
+
 page {
-  background: #f4f6fa;
-  color: #16263b;
+  background: var(--dark-background, #f4f6fa);
+  color: var(--dark-text, #16263b);
   font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
   font-size: 28rpx;
 }

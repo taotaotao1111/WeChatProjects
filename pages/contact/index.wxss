@@ -73,3 +73,21 @@ button.return-button {
   margin-top: 14rpx;
   color: #23558a;
 }
+
+@media (prefers-color-scheme: dark) {
+  .screen .contact-context { background: var(--dark-inset); }
+  .contact-recipient,
+  .back-link { color: var(--dark-accent); }
+
+  .contact-post,
+  .message-count,
+  .message-placeholder,
+  .contact-note { color: var(--dark-muted); }
+
+  .message-input {
+    background: var(--dark-inset);
+    color: var(--dark-text);
+  }
+
+  .contact-error { color: var(--dark-error); }
+}

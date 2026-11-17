@@ -35,7 +35,6 @@
       <text class="reset-icon" aria-hidden="true">↺</text>
       <text>重置</text>
     </button>
-    <button wx:elif="{{canExpand}}" size="mini" class="latest-link" bindtap="toggleAll">{{showAll ? '收起' : '查看全部 ›'}}</button>
   </view>
   <view class="filters" aria-label="信息类型">
     <button wx:for="{{filters}}" wx:key="key" data-kind="{{item.key}}" bindtap="selectFilter"

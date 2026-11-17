@@ -11,7 +11,7 @@ function failure(statusCode, message) {
 }
 
 function parseBody(event) {
-  if (typeof event.body !== 'string' || event.body.length > 16384) return null;
+  if (typeof event.body !== 'string' || event.body.length > 245760) return null;
   const body = event.isBase64Encoded ? Buffer.from(event.body, 'base64').toString('utf8') : event.body;
   try {
     const request = JSON.parse(body);
@@ -26,6 +26,7 @@ async function handleHttp(event, dispatch) {
   const request = parseBody(event);
   if (!request || typeof request.action !== 'string') return failure(400, '请求格式无效');
   const { code, action, payload } = request;
+  if (action !== 'saveAccountProfile' && event.body.length > 16384) return failure(400, '请求格式无效');
   if (typeof code !== 'string' || !code.trim() || code.length > 256) {
     return failure(401, '微信登录失败，请重试');
   }

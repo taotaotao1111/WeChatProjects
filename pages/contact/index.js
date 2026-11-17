@@ -36,13 +36,13 @@ Page({
     });
   },
 
-  async submit() {
+  async submit(event) {
     const { post, message, submitted, submitting, canSubmit } = this.data;
     if (!post || submitted || submitting || !canSubmit) return;
 
     this.setData({ submitting: true, error: '' });
     try {
-      await requestContact(post.id, message);
+      await requestContact(post.id, message, event.detail.value.wechatId || '');
       this.setData({ submitted: true });
       wx.showToast({ title: '申请已提交', icon: 'success' });
       this.returnToDetail();

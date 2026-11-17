@@ -1,4 +1,5 @@
 import { demoAuthor } from './profile';
+import { completionLabel, highlightFields } from './post-options';
 
 export const postFilters = [
   { key: 'all', label: '全部' },
@@ -12,6 +13,7 @@ export const districts = ['全上海', '浦东', '徐汇', '黄浦', '静安', '
 export const validityDays = [7, 15, 30];
 const publicationsKey = 'wulihulian:demo:publications';
 const favoritesKey = 'wulihulian:demo:favorites';
+const dayInMs = 86400000;
 
 const posts = [
   {
@@ -100,6 +102,7 @@ export function listPublications() {
   return (wx.getStorageSync(publicationsKey) || []).map((post) => ({
     ...post,
     expired: post.expiresAt <= Date.now(),
+    facts: post.renewedFrom ? (post.facts || []).map((fact) => fact.label === '信息有效期' ? { ...fact, value: post.validity } : fact) : post.facts,
   }));
 }
 
@@ -115,6 +118,7 @@ export function filterPosts(entries, { kind = 'all', query = '', category = '', 
     if (district && post.district !== district) return false;
     const searchable = [
       post.title, post.label, post.summary, post.district, post.context, post.category, post.industry, post.description,
+      ...(post.facts || []).map((fact) => fact.value),
     ].join(' ').toLowerCase();
     return keywords.every((keyword) => searchable.includes(keyword));
   });
@@ -124,17 +128,46 @@ export function getPost(id) {
   return posts.find((post) => post.id === id) || listPublications().find((post) => post.id === id);
 }
 
-export function publishPost(kind, values) {
-  const { category, industry, district, days } = values;
+function publicationFields(values, validity, kind, oldFacts = []) {
+  const { category, industry, district } = values;
   const title = (values.title || '').trim();
   const description = (values.description || '').trim();
-  if (!['opportunity', 'request'].includes(kind) || !categories.includes(category)) {
-    throw new Error('请选择发布类型和分类');
-  }
+  if (!categories.includes(category)) throw new Error('请选择分类');
   if (!title || title.length > 40) throw new Error('请填写 1–40 字的信息标题');
   if (!description || description.length > 600) throw new Error('请填写 1–600 字的详细介绍');
-  if (!industries.includes(industry) || !districts.includes(district) || !validityDays.includes(days)) {
-    throw new Error('请选择行业、地区和有效期');
+  if (!industries.includes(industry) || !districts.includes(district)) throw new Error('请选择行业和地区');
+  const fields = highlightFields(category, kind);
+  const highlights = {};
+  const highlightFacts = [];
+  for (const { key, label } of fields) {
+    const raw = values.highlights ? values.highlights[key] : oldFacts.find((fact) => fact.label === label)?.value;
+    if (raw === undefined || raw === '') continue;
+    if (typeof raw !== 'string' || raw.trim().length > 80) throw new Error(label + '最多填写 80 字');
+    if (raw.trim()) {
+      highlights[key] = raw.trim();
+      highlightFacts.push({ label, value: highlights[key] });
+    }
+  }
+  const baseFacts = [
+    { label: '信息分类', value: category },
+    { label: '所属行业', value: industry },
+    { label: '所在地区', value: district === '全上海' ? district : '上海 · ' + district },
+    { label: '信息有效期', value: validity },
+  ];
+  const currentLabels = new Set([...fields.map((field) => field.label), ...baseFacts.map((fact) => fact.label)]);
+  return {
+    category, industry, district, title, description,
+    highlights,
+    summary: description.replace(/\s+/g, ' '),
+    context: category + ' · ' + industry,
+    facts: [...highlightFacts, ...baseFacts, ...oldFacts.filter((fact) => !currentLabels.has(fact.label))],
+  };
+}
+
+export function publishPost(kind, values) {
+  const { days } = values;
+  if (!['opportunity', 'request'].includes(kind) || !validityDays.includes(days)) {
+    throw new Error('请选择发布类型和有效期');
   }
 
   const existing = listPublications();
@@ -146,27 +179,62 @@ export function publishPost(kind, values) {
     id = 'local-' + createdAt + '-' + sequence;
   }
   const post = {
-    id, kind, category, industry, district, title, description, createdAt,
-    summary: description.replace(/\s+/g, ' '),
+    id, kind, createdAt,
+    ...publicationFields(values, days + ' 天', kind),
     label: kind === 'opportunity' ? '校友资源' : '校友求助',
-    context: category + ' · ' + industry,
     validity: days + ' 天有效',
-    expiresAt: createdAt + days * 24 * 60 * 60 * 1000,
+    expiresAt: createdAt + days * dayInMs,
     own: true,
     author: demoAuthor,
-    facts: [
-      { label: '信息分类', value: category },
-      { label: '所属行业', value: industry },
-      { label: '所在地区', value: district === '全上海' ? district : '上海 · ' + district },
-      { label: '信息有效期', value: days + ' 天' },
-    ],
   };
   wx.setStorageSync(publicationsKey, [post, ...existing]);
   return post;
 }
 
+export function editPublication(id, values) {
+  const existing = listPublications();
+  const post = existing.find((item) => item.id === id);
+  if (!post || post.expired) throw new Error('这条信息暂无法编辑');
+  const validity = post.facts?.find((fact) => fact.label === '信息有效期')?.value || post.validity;
+  const sameCategory = values.category === post.category;
+  const highlights = values.highlights ?? (sameCategory ? post.highlights : undefined);
+  const edited = { ...post, ...publicationFields({ ...values, highlights }, validity, post.kind, sameCategory ? post.facts : []) };
+  wx.setStorageSync(publicationsKey, existing.map((item) => item.id === id ? edited : item));
+  return edited;
+}
+
+export function withdrawPublication(id) {
+  const existing = listPublications();
+  if (!existing.some((item) => item.id === id && !item.completionLabel)) throw new Error('无法下架这条信息');
+  wx.setStorageSync(publicationsKey, existing.map((item) =>
+    item.id === id ? { ...item, expiresAt: 0, withdrawn: true } : item));
+}
+
+export function completePublication(id) {
+  const existing = listPublications();
+  const post = existing.find((item) => item.id === id);
+  if (!post || post.withdrawn) throw new Error('无法标记这条信息');
+  if (post.completionLabel) return;
+  wx.setStorageSync(publicationsKey, existing.map((item) => item.id === id
+    ? { ...item, expiresAt: 0, completionLabel: completionLabel(item.category, item.kind) } : item));
+}
+
+export function renewPublication(id, days, expiresAt) {
+  const existing = listPublications();
+  const post = existing.find((item) => item.id === id);
+  if (!post || post.withdrawn || post.completionLabel || !validityDays.includes(days) || !expiresAt) throw new Error('这条信息暂无法续期');
+  if (post.expiresAt !== expiresAt) {
+    if (post.renewedFrom === expiresAt && post.renewedDays === days) return;
+    throw new Error('信息有效期已更新，请刷新后重试');
+  }
+  const newExpiry = Math.max(post.expiresAt, Date.now()) + days * dayInMs;
+  const validity = '已续期 ' + days + ' 天';
+  wx.setStorageSync(publicationsKey, existing.map((item) => item.id === id
+    ? { ...item, expiresAt: newExpiry, renewedFrom: expiresAt, renewedDays: days, validity } : item));
+}
+
 export function listFavorites() {
-  return (wx.getStorageSync(favoritesKey) || []).map(getPost).filter(Boolean);
+  return (wx.getStorageSync(favoritesKey) || []).map(getPost).filter((post) => post && !post.withdrawn);
 }
 
 export function toggleFavorite(id) {

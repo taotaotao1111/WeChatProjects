@@ -19,7 +19,7 @@ export function submitVerification(values) {
   const college = (values.college || '').trim();
   const major = (values.major || '').trim();
   const year = (values.year || '').trim();
-  if (!name || !college || !major || !degree) throw new Error('请填写完整的校友资料');
+  if (!name || !college || !major || !['本科', '硕士', '博士'].includes(degree)) throw new Error('请填写完整的校友资料');
   if (!/^\d{4}$/.test(year) || Number(year) < 1950 || Number(year) > new Date().getFullYear() + 8) {
     throw new Error('请输入四位数的毕业年份');
   }

@@ -1,0 +1,69 @@
+@media (prefers-color-scheme: dark) {
+  page {
+    --dark-background: #17191c;
+    --dark-surface: #20242a;
+    --dark-inset: #292d33;
+    --dark-pressed: #30363d;
+    --dark-border: #363c44;
+    --dark-text: #f0f2f4;
+    --dark-body: #d0d6dd;
+    --dark-muted: #b2bbc5;
+    --dark-accent: #9acbff;
+    --dark-primary: #295884;
+    --dark-primary-pressed: #21476e;
+    --dark-positive-background: #193b33;
+    --dark-positive-text: #97dfb9;
+    --dark-error: #ffadad;
+  }
+
+  .screen .surface {
+    background: var(--dark-surface);
+    border-color: var(--dark-border);
+    box-shadow: none;
+  }
+
+  .screen .empty,
+  .screen .page-intro,
+  .screen .form-note,
+  .screen .field-arrow,
+  .screen .field-placeholder { color: var(--dark-muted); }
+
+  .screen .empty-title,
+  .screen .page-title,
+  .screen .field-label { color: var(--dark-text); }
+
+  .screen .field-required,
+  .screen .form-error { color: var(--dark-error); }
+
+  .screen .field-control {
+    background: var(--dark-inset);
+    color: var(--dark-text);
+  }
+
+  .field-input-placeholder { color: var(--dark-muted); }
+
+  .screen .pill--opportunity {
+    background: var(--dark-positive-background);
+    color: var(--dark-positive-text);
+  }
+
+  .screen .pill--request,
+  .screen .empty-action {
+    background: var(--dark-inset);
+    color: var(--dark-accent);
+  }
+
+  .screen .fixed-actions {
+    background: var(--dark-surface);
+    border-color: var(--dark-border);
+  }
+
+  .screen .primary-button { background: var(--dark-primary); }
+  .screen .primary-button--pressed { background: var(--dark-primary-pressed); }
+
+  .screen .primary-button[disabled] {
+    background: var(--dark-inset);
+    color: var(--dark-muted);
+    opacity: 1;
+  }
+}

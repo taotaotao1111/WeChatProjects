@@ -44,8 +44,9 @@ export function loadFeed() {
 
 export function loadPost(id) {
   if (usingCloud) return call('detail', { id });
+  const post = localPosts.getPost(id);
   return {
-    post: localPosts.getPost(id) || null,
+    post: post ? { ...post, authorVerified: Boolean(post.own && localProfile.getVerification()?.status === 'approved') } : null,
     request: localContacts.getContactRequest(id),
     saved: localPosts.listFavorites().some((post) => post.id === id),
   };
@@ -59,12 +60,52 @@ export function saveFavorite(id, saved) {
   return usingCloud ? call('favorite', { id, saved }) : localPosts.toggleFavorite(id);
 }
 
-export function requestContact(id, message) {
-  return usingCloud ? call('contact', { id, message }) : localContacts.submitContactRequest(id, message);
+export function requestContact(id, message, wechatId) {
+  return usingCloud ? call('contact', { id, message, wechatId }) : localContacts.submitContactRequest(id, message);
 }
 
-export function respondToContact(id, status) {
-  return usingCloud ? call('respond', { id, status }) : localContacts.respondToIncoming(status);
+export function editPost(id, values) {
+  return usingCloud ? call('editPost', { ...values, id }) : localPosts.editPublication(id, values);
+}
+
+export function withdrawPost(id) {
+  return usingCloud ? call('withdrawPost', { id }) : localPosts.withdrawPublication(id);
+}
+
+export function completePost(id) {
+  return usingCloud ? call('completePost', { id }) : localPosts.completePublication(id);
+}
+
+export function renewPost(id, days, expiresAt) {
+  return usingCloud ? call('renewPost', { id, days, expiresAt }) : localPosts.renewPublication(id, days, expiresAt);
+}
+
+export function reportPost(id, reason) {
+  return call('reportPost', { id, reason });
+}
+
+export function loadModeration() {
+  return call('moderation');
+}
+
+export function reviewVerification(id, status, reviewNote) {
+  return call('reviewVerification', { id, status, reviewNote });
+}
+
+export function resolveReport(id, status) {
+  return call('resolveReport', { id, status });
+}
+
+export function respondToContact(id, status, wechatId) {
+  return usingCloud ? call('respond', { id, status, wechatId }) : localContacts.respondToIncoming(status);
+}
+
+export function updateContactWechat(id, wechatId) {
+  return call('updateContactWechat', { id, wechatId });
+}
+
+export function loadPendingContactCount() {
+  return usingCloud ? call('pendingContactCount') : Number(localContacts.getIncomingRequest().status === 'pending');
 }
 
 export function loadProfile() {
@@ -76,6 +117,10 @@ export function loadProfile() {
     favorites: localPosts.listFavorites(),
     requestCount: localContacts.listContactRequests().length,
   };
+}
+
+export function saveAccountProfile(nickname, avatar) {
+  return call('saveAccountProfile', { nickname, avatar });
 }
 
 export function loadVerification() {

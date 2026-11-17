@@ -1,35 +1,76 @@
 <view class="screen tab-screen">
-  <view wx:if="{{author}}" class="profile-card">
-    <view class="profile-avatar">{{author.initial}}</view>
+  <view wx:if="{{author && !editingAccount}}" class="profile-card">
+    <image wx:if="{{author.avatarSrc}}" class="profile-avatar" src="{{author.avatarSrc}}" mode="aspectFill" />
+    <view wx:else class="profile-avatar">{{author.initial}}</view>
     <view class="profile-identity">
       <view class="profile-name">{{author.name}}</view>
       <view class="profile-bio">{{author.profile}}</view>
       <view class="profile-bio">{{author.role}}</view>
     </view>
+    <button wx:if="{{usingCloud}}" size="mini" class="profile-edit-account" bindtap="openAccount">
+      {{author.personalized ? '编辑资料' : '完善资料'}}
+    </button>
+  </view>
+  <view wx:elif="{{editingAccount}}" class="surface profile-account-card">
+    <form class="profile-account-form" bindsubmit="saveAccount">
+      <view class="profile-account-title">编辑资料</view>
+      <button class="profile-avatar-picker" open-type="chooseAvatar" bindchooseavatar="chooseAvatar"
+        hover-class="profile-avatar-picker--pressed" disabled="{{savingAccount}}">
+        <image wx:if="{{avatarDraft || author.avatarSrc}}" class="profile-avatar" src="{{avatarDraft || author.avatarSrc}}" mode="aspectFill" />
+        <view wx:else class="profile-avatar" aria-hidden="true">{{author.initial}}</view>
+        <text class="profile-avatar-label">{{avatarDraft || author.avatarSrc ? '更换头像' : '选择微信头像'}}</text>
+        <text class="profile-avatar-arrow" aria-hidden="true">›</text>
+      </button>
+      <view class="profile-nickname-field">
+        <label class="field-label" for="account-nickname">昵称</label>
+        <input id="account-nickname" class="field-control profile-nickname-input" name="nickname" type="nickname"
+          value="{{nicknameDraft}}" maxlength="32" placeholder="选择微信昵称或自行填写"
+          placeholder-class="field-input-placeholder" disabled="{{savingAccount}}" />
+      </view>
+      <view wx:if="{{accountError}}" class="form-error" aria-role="alert">{{accountError}}</view>
+      <view class="profile-account-actions">
+        <button class="profile-account-action profile-account-cancel" bindtap="closeAccount" disabled="{{savingAccount}}">取消</button>
+        <button class="profile-account-action profile-account-save" form-type="submit" disabled="{{savingAccount}}">
+          {{savingAccount ? '保存中…' : '保存资料'}}
+        </button>
+      </view>
+    </form>
   </view>
   <view wx:if="{{loadFailed}}" class="surface empty">暂时无法读取记录，请稍后重试。</view>
   <block wx:else>
     <view class="surface profile-menu">
       <navigator class="profile-row" url="/pages/verify/index">
         <text class="profile-row-label">校友身份认证</text>
-        <text>{{verification ? (usingCloud ? '待审核' : '待审核 · 模拟') : '去认证'}} ›</text>
+        <text>{{!verification ? '去认证' : verification.status === 'approved' ? '已认证' : verification.status === 'rejected' ? '未通过' : '待审核'}} ›</text>
       </navigator>
-      <button class="profile-row" bindtap="openRequests">
+      <view class="profile-row" aria-role="button" hover-class="profile-row--pressed" bindtap="openRequests">
         <text class="profile-row-label">联系记录</text>
         <text>{{requestCount}} 条已发出 ›</text>
-      </button>
+      </view>
+      <navigator wx:if="{{isAdmin}}" class="profile-row" url="/pages/moderation/index">
+        <text class="profile-row-label">认证与举报处理</text>
+        <text>进入 ›</text>
+      </navigator>
     </view>
     <view class="profile-heading">
       <view class="profile-title">我的发布</view>
       <text class="profile-note">{{publications.length}} 条</text>
     </view>
-    <navigator wx:for="{{publications}}" wx:key="id" class="surface application" url="/pages/detail/index?id={{item.id}}">
-      <view class="application-top">
-        <text class="pill pill--{{item.kind}}">{{item.label}}</text>
-        <text class="profile-note">{{item.expired ? '已到期' : (usingCloud ? '已发布' : '已发布 · 模拟')}}</text>
+    <view wx:for="{{publications}}" wx:key="id" class="surface application">
+      <navigator url="/pages/detail/index?id={{item.id}}">
+        <view class="application-top">
+          <text class="pill pill--{{item.kind}}">{{item.label}}</text>
+          <text class="profile-note">{{item.withdrawn ? '已下架' : item.completionLabel || (item.expired ? '已到期' : '已发布')}}</text>
+        </view>
+        <view class="application-title">{{item.title}}</view>
+        <view wx:if="{{item.expiryText}}" class="publication-expiry">{{item.expired ? '到期于 ' : '有效至 '}}{{item.expiryText}}</view>
+      </navigator>
+      <view wx:if="{{!item.withdrawn && !item.completionLabel}}" class="publication-actions">
+        <navigator wx:if="{{!item.expired}}" class="publication-action" url="/pages/post-form/index?id={{item.id}}">编辑</navigator>
+        <button size="mini" class="publication-action publication-action--manage" bindtap="managePublication"
+          data-id="{{item.id}}" disabled="{{managing}}">管理 ›</button>
       </view>
-      <view class="application-title">{{item.title}}</view>
-    </navigator>
+    </view>
     <view wx:if="{{!publications.length}}" class="surface profile-empty">
       <text>还没有发布过校友信息。</text>
       <navigator url="/pages/publish/index" open-type="switchTab">去发布 ›</navigator>
@@ -41,7 +82,7 @@
     <navigator wx:for="{{favorites}}" wx:key="id" class="surface application" url="/pages/detail/index?id={{item.id}}">
       <view class="application-top">
         <text class="pill pill--{{item.kind}}">{{item.label}}</text>
-        <text class="profile-note">{{item.expired ? '已到期' : '查看详情 ›'}}</text>
+        <text class="profile-note">{{item.completionLabel || (item.expired ? '已到期' : '查看详情 ›')}}</text>
       </view>
       <view class="application-title">{{item.title}}</view>
     </navigator>

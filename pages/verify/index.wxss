@@ -22,3 +22,10 @@
 .verify-submit {
   margin-top: 24rpx;
 }
+
+@media (prefers-color-scheme: dark) {
+  .screen .verify-banner { background: var(--dark-inset); }
+  .verify-title,
+  .verify-record { color: var(--dark-text); }
+  .verify-note { color: var(--dark-body); }
+}

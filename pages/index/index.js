@@ -2,7 +2,6 @@ import { loadFeed } from '../../services/alumni/data';
 import { categories, filterPosts, postFilters } from '../../services/alumni/posts';
 import { selectAlumniTab } from '../../common/alumni-tab';
 
-const HOME_PREVIEW_SIZE = 3;
 const categoryIcons = ['job', 'rocket', 'career', 'life', 'social'];
 
 Page({
@@ -16,8 +15,6 @@ Page({
     category: '',
     query: '',
     hasFilters: false,
-    showAll: false,
-    canExpand: false,
     posts: [],
     feedLoading: true,
     feedError: '',
@@ -44,14 +41,13 @@ Page({
   },
 
   refresh(changes = {}) {
-    const { selectedKind, category, query, showAll } = { ...this.data, ...changes };
+    const { selectedKind, category, query } = { ...this.data, ...changes };
     const hasFilters = selectedKind !== 'all' || Boolean(category || query.trim());
     const matches = filterPosts(this.feed || [], { kind: selectedKind, category, query });
     this.setData({
       ...changes,
       hasFilters,
-      posts: showAll || hasFilters ? matches : matches.slice(0, HOME_PREVIEW_SIZE),
-      canExpand: matches.length > HOME_PREVIEW_SIZE,
+      posts: matches,
     });
   },
 
@@ -65,18 +61,14 @@ Page({
 
   selectCategory(event) {
     const category = event.currentTarget.dataset.category;
-    this.refresh({ category: this.data.category === category ? '' : category, showAll: false });
+    this.refresh({ category: this.data.category === category ? '' : category });
   },
 
   selectFilter(event) {
-    this.refresh({ selectedKind: event.currentTarget.dataset.kind, showAll: false });
+    this.refresh({ selectedKind: event.currentTarget.dataset.kind });
   },
 
   resetFilters() {
-    this.refresh({ category: '', query: '', selectedKind: 'all', showAll: false });
-  },
-
-  toggleAll() {
-    this.refresh({ showAll: !this.data.showAll });
+    this.refresh({ category: '', query: '', selectedKind: 'all' });
   },
 });

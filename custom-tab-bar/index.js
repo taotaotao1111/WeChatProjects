@@ -6,7 +6,7 @@ const tabs = [
 ];
 
 Component({
-  data: { tabs, selectedRoute: tabs[0].route },
+  data: { tabs, selectedRoute: tabs[0].route, pendingContactCount: 0 },
 
   lifetimes: {
     attached() {

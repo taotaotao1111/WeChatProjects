@@ -48,3 +48,19 @@
   font-size: 26rpx;
   font-weight: 700;
 }
+
+@media (prefers-color-scheme: dark) {
+  .publish-description { color: var(--dark-body); }
+  .publish-link { color: var(--dark-accent); }
+
+  .publish-icon {
+    color: var(--dark-accent);
+    background: var(--dark-inset);
+  }
+
+  .publish-icon--gold,
+  .publish-pill--gold {
+    color: #f0d29a;
+    background: #413521;
+  }
+}

@@ -1,9 +1,12 @@
-import { loadPost, saveFavorite, usingCloud } from '../../services/alumni/data';
+import { openOutgoingRequests } from '../../common/alumni-tab';
+import { loadPost, reportPost, saveFavorite, usingCloud } from '../../services/alumni/data';
+import { expiryText } from '../../services/alumni/post-options';
 
 Page({
   data: {
     post: null,
     contactRequest: null,
+    expiryText: '',
     usingCloud,
     loading: true,
     loadError: false,
@@ -23,7 +26,7 @@ Page({
     this.setData({ loading: true, loadError: false });
     try {
       const { post, request, saved } = this.postId ? await loadPost(this.postId) : {};
-      this.setData({ post: post || null, contactRequest: request || null, saved: Boolean(saved) });
+      this.setData({ post: post || null, expiryText: expiryText(post?.expiresAt), contactRequest: request || null, saved: Boolean(saved) });
     } catch (error) {
       this.setData({ loadError: true });
     } finally {
@@ -33,6 +36,23 @@ Page({
 
   openHome() {
     wx.switchTab({ url: '/pages/index/index' });
+  },
+
+  openRequests: openOutgoingRequests,
+
+  async report() {
+    const { post } = this.data;
+    if (!usingCloud || !post || post.own || post.withdrawn) return;
+    try {
+      const { confirm, content } = await wx.showModal({
+        title: '举报信息', editable: true, placeholderText: '请说明举报原因（最多 120 字）',
+      });
+      if (!confirm) return;
+      await reportPost(post.id, content);
+      wx.showToast({ title: '举报已提交', icon: 'success' });
+    } catch (error) {
+      wx.showToast({ title: error.message || '提交失败', icon: 'none' });
+    }
   },
 
   async savePost() {

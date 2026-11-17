@@ -6,7 +6,7 @@ Page({
     usingCloud,
     loading: true,
     submitting: false,
-    degreeOptions: ['请选择', '专科', '本科', '硕士', '博士'],
+    degreeOptions: ['请选择', '本科', '硕士', '博士'],
     degreeIndex: 0,
     error: '',
   },
@@ -27,7 +27,7 @@ Page({
 
   async submit(event) {
     const { certification, degreeOptions, degreeIndex, loading, submitting } = this.data;
-    if (certification || loading || submitting) return;
+    if ((certification && certification.status !== 'rejected') || loading || submitting) return;
     this.setData({ submitting: true });
     try {
       this.setData({

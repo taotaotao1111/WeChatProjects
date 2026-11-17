@@ -1,11 +1,13 @@
 <view class="screen tab-screen">
   <view class="message-tabs" aria-label="消息类型">
     <button class="message-tab {{active === item.key ? 'message-tab--active' : ''}}" wx:for="{{tabs}}"
-      wx:key="key" data-key="{{item.key}}" bindtap="selectTab" aria-pressed="{{active === item.key}}">{{item.label}}</button>
+      wx:key="key" data-key="{{item.key}}" bindtap="selectTab" aria-pressed="{{active === item.key}}">
+      {{item.label}}<text wx:if="{{item.key === 'incoming' && pendingCount}}" class="message-tab-count">{{pendingCount > 99 ? '99+' : pendingCount}}</text>
+    </button>
   </view>
   <view wx:if="{{loadFailed}}" class="surface empty">
     <view class="empty-title">暂时无法读取消息</view>
-    <text>切换页面后再试一次。</text>
+    <button class="response" bindtap="refresh">重试</button>
   </view>
   <view wx:elif="{{loading}}" class="surface empty">正在加载消息…</view>
   <block wx:elif="{{active === 'incoming'}}">
@@ -13,8 +15,8 @@
       <view class="message-heading">
         <view class="message-avatar">{{item.initial}}</view>
         <view class="message-person">
-          <view class="message-title">{{item.name}}</view>
-          <view class="message-meta">{{item.subject}}</view>
+          <view class="message-title">{{item.post ? item.post.title : item.subject}}</view>
+          <view class="message-meta">{{item.name}} · 申请联系</view>
         </view>
         <text wx:if="{{!usingCloud}}" class="message-meta">示例</text>
       </view>
@@ -24,15 +26,45 @@
         <button class="response response--primary" data-status="accepted" data-id="{{item.id}}" bindtap="respond" disabled="{{responding}}">同意联系</button>
       </view>
       <view wx:else class="response-status">{{item.status === 'accepted' ? '已同意联系' : '已拒绝'}}</view>
+      <view wx:if="{{usingCloud && item.status === 'accepted'}}" class="contact-share">
+        <view wx:if="{{item.wechatId}}" class="contact-share-row">
+          <view class="contact-share-info">
+            <text class="contact-share-label">申请人的微信号</text>
+            <text class="contact-share-value">{{item.wechatId}}</text>
+          </view>
+          <button size="mini" class="response contact-share-action" bindtap="copyWeChat" data-id="{{item.id}}">复制</button>
+        </view>
+        <view wx:else class="contact-share-note">申请人还未留下微信号，对方可以稍后补填。</view>
+        <view wx:if="{{item.hasSharedWechatId}}" class="contact-share-note">你填写的微信号已分享给这位申请人。</view>
+      </view>
     </view>
     <view wx:if="{{!incoming.length}}" class="surface empty">还没有收到联系申请</view>
   </block>
   <block wx:elif="{{active === 'outgoing'}}">
-    <navigator wx:for="{{outgoing}}" wx:key="postId" class="surface message-entry" url="/pages/detail/index?id={{item.postId}}">
-      <view class="message-title">{{item.post.title}}</view>
-      <view class="message-meta">联系 {{item.post.author.name}} · {{item.status === 'accepted' ? '已同意联系' : item.status === 'declined' ? '已拒绝' : '等待对方处理'}}</view>
+    <view wx:for="{{outgoing}}" wx:key="postId" class="surface message-entry">
+      <navigator url="/pages/detail/index?id={{item.postId}}">
+        <view class="message-title">{{item.post.title}}</view>
+        <view class="message-meta">联系 {{item.post.author.name}} · {{item.status === 'accepted' ? '已同意联系' : item.status === 'declined' ? '已拒绝' : '等待对方处理'}}</view>
+      </navigator>
       <view class="message-body">{{item.message}}</view>
-    </navigator>
+      <view wx:if="{{usingCloud && item.status !== 'declined'}}" class="contact-share">
+        <view wx:if="{{item.wechatId}}" class="contact-share-row">
+          <view class="contact-share-info">
+            <text class="contact-share-label">发布者的微信号</text>
+            <text class="contact-share-value">{{item.wechatId}}</text>
+          </view>
+          <button size="mini" class="response contact-share-action" bindtap="copyWeChat" data-direction="outgoing" data-id="{{item.id}}">复制</button>
+        </view>
+        <view class="contact-share-row">
+          <view class="contact-share-info contact-share-note">
+            <text wx:if="{{item.hasSharedWechatId}}">{{item.status === 'accepted' ? '你的微信号已分享给发布者。' : '已填写微信号，对方同意后可见。'}}</text>
+            <text wx:elif="{{item.status === 'accepted'}}">留下微信号，方便发布者联系你。</text>
+            <text wx:else>可提前留下微信号，对方同意后可见。</text>
+          </view>
+          <button size="mini" class="response contact-share-action" bindtap="shareWechat" data-id="{{item.id}}" disabled="{{responding}}">{{item.hasSharedWechatId ? '更新微信号' : '补填微信号'}}</button>
+        </view>
+      </view>
+    </view>
     <view wx:if="{{!outgoing.length}}" class="surface empty">还没有发出的申请</view>
   </block>
   <block wx:else>

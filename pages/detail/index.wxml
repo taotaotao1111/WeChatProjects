@@ -9,7 +9,7 @@
   <view class="surface detail-header">
     <view class="detail-top">
       <text class="pill pill--{{post.kind}}">{{post.label}}</text>
-      <text class="detail-validity">{{post.expired ? '已到期' : post.own ? '我发布的' : post.validity}}</text>
+      <text class="detail-validity">{{post.withdrawn ? '已下架' : post.completionLabel || (post.expired ? '已到期' : post.own ? '我发布的' : post.validity)}}</text>
     </view>
     <view class="detail-title">{{post.title}}</view>
     <text class="detail-meta">{{post.district === '全上海' ? post.district : '上海 · ' + post.district}} · {{post.context}}</text>
@@ -24,14 +24,15 @@
     <view class="request-status-title">联系申请已提交</view>
     <view class="request-status-note">{{contactRequest.status === 'accepted' ? '对方已同意联系。' : contactRequest.status === 'declined' ? '对方已拒绝申请。' : '等待对方处理。'}}</view>
     <text class="request-message">{{contactRequest.message}}</text>
+    <view wx:if="{{usingCloud && contactRequest.status !== 'declined'}}" class="request-record-link" aria-role="button" bindtap="openRequests">查看联系记录 ›</view>
   </view>
 
   <view class="surface detail-section">
-    <view class="section-title">{{post.own ? '基本信息' : post.kind === 'opportunity' ? '岗位信息' : '求助信息'}}</view>
+    <view class="section-title">{{post.category === '创业合作' ? '合作信息' : post.category === '求职招聘' ? (post.kind === 'opportunity' ? '岗位信息' : '求职信息') : '基本信息'}}</view>
     <view class="fact-grid">
       <view wx:for="{{post.facts}}" wx:key="label" class="fact">
         <view class="fact-label">{{item.label}}</view>
-        <view class="fact-value">{{item.value}}</view>
+        <view class="fact-value">{{item.label === '信息有效期' ? (post.withdrawn ? '已下架' : post.completionLabel || expiryText || item.value) : item.value}}</view>
       </view>
     </view>
     <view class="section-title description-title">{{post.kind === 'opportunity' ? '机会介绍' : '详细说明'}}</view>
@@ -45,7 +46,8 @@
       <view class="author-info">
         <view class="author-name-line">
           <text class="author-name">{{post.author.name}}</text>
-          <text class="author-verified">{{post.own ? (usingCloud ? '我发布的' : '演示账号') : (usingCloud ? '社区成员' : '已认证校友 · 模拟')}}</text>
+          <text wx:if="{{post.authorVerified}}" class="author-verified">已认证校友</text>
+          <text wx:else class="author-member">{{post.own ? (usingCloud ? '我发布的' : '演示账号') : (usingCloud ? '社区成员' : '示例校友')}}</text>
         </view>
         <view class="author-profile">{{post.author.profile}}</view>
         <view class="author-profile">{{post.author.role}}</view>
@@ -53,9 +55,10 @@
     </view>
   </view>
 
+  <button wx:if="{{usingCloud && !post.own && !post.withdrawn}}" class="empty-action" bindtap="report">举报这条信息</button>
   <view class="fixed-actions detail-actions">
     <button wx:if="{{post.own}}" class="primary-button" bindtap="openHome">返回校友广场</button>
-    <button wx:elif="{{post.expired}}" class="primary-button" disabled>信息已到期</button>
+    <button wx:elif="{{post.expired}}" class="primary-button" disabled>{{post.completionLabel || '信息已到期'}}</button>
     <block wx:else>
     <button class="favorite-button" aria-pressed="{{saved}}" bindtap="savePost" disabled="{{loading || saving}}">{{saved ? '已收藏' : '收藏'}}</button>
     <button wx:if="{{contactRequest}}" class="primary-button" disabled>{{contactRequest.status === 'accepted' ? '已同意联系' : contactRequest.status === 'declined' ? '申请已拒绝' : '等待对方处理'}}</button>

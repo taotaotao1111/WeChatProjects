@@ -1,0 +1,14 @@
+{
+  "light": {
+    "pageBackground": "#F4F6FA",
+    "navigationBackground": "#FFFFFF",
+    "navigationTextStyle": "black",
+    "refreshTextStyle": "dark"
+  },
+  "dark": {
+    "pageBackground": "#17191C",
+    "navigationBackground": "#17191C",
+    "navigationTextStyle": "white",
+    "refreshTextStyle": "light"
+  }
+}

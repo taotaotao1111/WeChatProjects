@@ -7,7 +7,7 @@
   background: #e8eef5;
 }
 
-button.message-tab {
+.message-tabs .message-tab {
   flex: 1;
   min-width: 0;
   margin: 0;
@@ -20,9 +20,23 @@ button.message-tab {
   line-height: 66rpx;
 }
 
-button.message-tab--active {
+.message-tabs .message-tab--active {
   background: #173d65;
   color: #fff;
+}
+
+.message-tab-count {
+  display: inline-block;
+  min-width: 24rpx;
+  margin-left: 5rpx;
+  padding: 0 5rpx;
+  border-radius: 20rpx;
+  background: #c13441;
+  color: #fff;
+  font-size: 17rpx;
+  line-height: 27rpx;
+  text-align: center;
+  vertical-align: middle;
 }
 
 .message-entry {
@@ -82,7 +96,7 @@ button.message-tab--active {
   margin-top: 16rpx;
 }
 
-button.response {
+.screen .response {
   margin: 0;
   padding: 0 20rpx;
   border-radius: 12rpx;
@@ -92,7 +106,7 @@ button.response {
   line-height: 62rpx;
 }
 
-button.response--primary {
+.screen .response--primary {
   background: #173d65;
   color: #fff;
 }
@@ -101,4 +115,83 @@ button.response--primary {
   margin-top: 17rpx;
   text-align: right;
   font-weight: 700;
+}
+
+.contact-share {
+  margin-top: 16rpx;
+  padding: 14rpx 16rpx;
+  border-radius: 12rpx;
+  background: #f2f6fb;
+}
+
+.contact-share-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12rpx;
+}
+
+.contact-share-row + .contact-share-row,
+.contact-share-row + .contact-share-note,
+.contact-share-note + .contact-share-note {
+  margin-top: 12rpx;
+}
+
+.contact-share-info {
+  min-width: 0;
+  word-break: break-word;
+}
+
+.contact-share-label,
+.contact-share-value {
+  display: block;
+}
+
+.contact-share-label,
+.contact-share-note {
+  color: #536981;
+  font-size: 23rpx;
+  line-height: 1.5;
+}
+
+.contact-share-value {
+  margin-top: 3rpx;
+  color: #16263b;
+  font-size: 27rpx;
+  font-weight: 650;
+}
+
+.contact-share .contact-share-action {
+  flex: none;
+  width: auto;
+  min-height: 60rpx;
+  line-height: 60rpx;
+}
+
+@media (prefers-color-scheme: dark) {
+  .message-tabs,
+  .message-body,
+  .contact-share { background: var(--dark-inset); }
+
+  .message-tabs .message-tab,
+  .message-meta,
+  .response-status,
+  .contact-share-label,
+  .contact-share-note { color: var(--dark-muted); }
+
+  .message-title,
+  .contact-share-value { color: var(--dark-text); }
+  .message-body { color: var(--dark-body); }
+
+  .message-avatar,
+  .screen .response {
+    background: var(--dark-inset);
+    color: var(--dark-accent);
+  }
+
+  .message-tabs .message-tab--active,
+  .screen .response--primary {
+    background: var(--dark-primary);
+    color: #fff;
+  }
 }

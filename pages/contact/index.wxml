@@ -19,6 +19,12 @@
       <view class="message-count">{{messageLength}} / {{maxLength}}</view>
     </view>
 
+    <view wx:if="{{usingCloud}}" class="surface message-card">
+      <label class="message-label" for="contact-wechat">微信号（选填）</label>
+      <input id="contact-wechat" class="field-control" name="wechatId" maxlength="30" placeholder="方便发布者联系你"
+        placeholder-class="field-input-placeholder" />
+      <view class="contact-note">发布者同意申请后，才能看到你填写的微信号。</view>
+    </view>
     <view class="contact-note">{{usingCloud ? '联系说明发送给发布者。对方处理后，可在消息中查看结果。' : '当前为模拟体验，申请仅保存在本机。'}}</view>
     <view wx:if="{{error}}" class="contact-error" aria-role="alert">{{error}}</view>
     <button class="primary-button" form-type="submit" disabled="{{!canSubmit || submitting}}"

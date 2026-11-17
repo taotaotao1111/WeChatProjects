@@ -7,15 +7,21 @@
     "pages/detail/index",
     "pages/contact/index",
     "pages/post-form/index",
-    "pages/verify/index"
+    "pages/verify/index",
+    "pages/moderation/index"
   ],
   "window": {
-    "backgroundColor": "#F4F6FA",
-    "navigationBarBackgroundColor": "#FFFFFF",
+    "backgroundColor": "@pageBackground",
+    "backgroundColorTop": "@pageBackground",
+    "backgroundColorBottom": "@pageBackground",
+    "backgroundTextStyle": "@refreshTextStyle",
+    "navigationBarBackgroundColor": "@navigationBackground",
     "navigationBarTitleText": "武理沪联",
-    "navigationBarTextStyle": "black"
+    "navigationBarTextStyle": "@navigationTextStyle"
   },
   "sitemapLocation": "sitemap.json",
+  "darkmode": true,
+  "themeLocation": "theme.json",
   "style": "v2",
   "lazyCodeLoading": "requiredComponents",
   "tabBar": {

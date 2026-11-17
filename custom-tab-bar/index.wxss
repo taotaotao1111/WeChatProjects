@@ -13,7 +13,7 @@
   color: #536981;
 }
 
-button.bottom-tab {
+.bottom-tabs .bottom-tab {
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -32,11 +32,11 @@ button.bottom-tab {
   line-height: 1.35;
 }
 
-button.bottom-tab::after {
+.bottom-tab::after {
   border: 0;
 }
 
-button.bottom-tab--selected {
+.bottom-tabs .bottom-tab--selected {
   color: #173d65;
   font-weight: 750;
 }
@@ -46,6 +46,28 @@ button.bottom-tab--selected {
   width: 54rpx;
   height: 54rpx;
   margin-bottom: 2rpx;
+}
+
+.tab-icon-wrap {
+  position: relative;
+}
+
+.tab-count {
+  position: absolute;
+  top: 0;
+  left: 39rpx;
+  min-width: 26rpx;
+  padding: 0 6rpx;
+  box-sizing: border-box;
+  border: 2rpx solid #fff;
+  border-radius: 20rpx;
+  background: #c13441;
+  color: #fff;
+  font-size: 17rpx;
+  font-weight: 700;
+  line-height: 23rpx;
+  text-align: center;
+  white-space: nowrap;
 }
 
 .publish-badge {
@@ -82,4 +104,25 @@ button.bottom-tab--selected {
 
 .bottom-tab--selected .publish-badge {
   border-color: #e1ebf6;
+}
+
+@media (prefers-color-scheme: dark) {
+  .bottom-tabs {
+    background: #17191c;
+    border-color: #363c44;
+    color: #b2bbc5;
+  }
+
+  .bottom-tabs .bottom-tab--selected { color: #9acbff; }
+  .tab-icon { filter: brightness(0) invert(0.72); }
+  .bottom-tab--selected .tab-icon { filter: brightness(0) invert(0.94); }
+  .tab-count { border-color: #17191c; }
+
+  .publish-badge {
+    background: #292d33;
+    border-color: #484e56;
+    box-shadow: 0 3rpx 12rpx rgba(0, 0, 0, 0.3);
+  }
+
+  .bottom-tab--selected .publish-badge { border-color: #9acbff; }
 }

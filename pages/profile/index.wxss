@@ -25,18 +25,122 @@
 
 .profile-identity {
   min-width: 0;
+  flex: 1;
 }
 
 .profile-name {
   margin-bottom: 6rpx;
   font-size: 34rpx;
   font-weight: 750;
+  overflow-wrap: anywhere;
 }
 
 .profile-bio {
   color: #e2edf9;
   font-size: 23rpx;
   line-height: 1.55;
+}
+
+.profile-card .profile-edit-account {
+  flex: none;
+  width: auto;
+  margin: 0;
+  padding: 0 16rpx;
+  border-radius: 12rpx;
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  font-size: 22rpx;
+  line-height: 64rpx;
+}
+
+.profile-account-card {
+  margin-bottom: 20rpx;
+  padding: 26rpx;
+}
+
+.profile-account-form {
+  display: block;
+}
+
+.profile-account-title {
+  margin-bottom: 20rpx;
+  color: #16263b;
+  font-size: 33rpx;
+  font-weight: 750;
+  line-height: 1.4;
+}
+
+.profile-account-card .profile-avatar-picker {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 16rpx;
+  box-sizing: border-box;
+  border: 2rpx solid #e7edf4;
+  border-radius: 18rpx;
+  background: #f6f8fb;
+  color: #173d65;
+  font-size: 26rpx;
+  font-weight: 650;
+  line-height: 1.4;
+  text-align: left;
+}
+
+.profile-account-card .profile-avatar-picker--pressed {
+  background: #eaf0f7;
+}
+
+.profile-avatar-label {
+  flex: 1;
+  min-width: 0;
+}
+
+.profile-avatar-arrow {
+  color: #607991;
+  font-size: 36rpx;
+  line-height: 1;
+}
+
+.profile-nickname-field {
+  margin-top: 22rpx;
+}
+
+.profile-nickname-field .profile-nickname-input {
+  height: 76rpx;
+  border: 2rpx solid #e7edf4;
+  background: #f6f8fb;
+}
+
+.profile-account-actions {
+  display: flex;
+  gap: 12rpx;
+  margin-top: 24rpx;
+}
+
+.profile-account-actions .profile-account-action {
+  flex: 1;
+  min-width: 0;
+  width: 0;
+  margin: 0;
+  padding: 0;
+  border-radius: 14rpx;
+  background: #edf3f9;
+  color: #173d65;
+  font-size: 26rpx;
+  font-weight: 650;
+  line-height: 72rpx;
+}
+
+.profile-account-actions .profile-account-cancel {
+  flex: 0 0 132rpx;
+}
+
+.profile-account-actions .profile-account-save {
+  background: #173d65;
+  color: #fff;
 }
 
 .profile-menu {
@@ -63,14 +167,8 @@
   border-top: 2rpx solid #e7edf4;
 }
 
-button.profile-row {
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  border-radius: 0;
-  background: transparent;
-  font-weight: 400;
-  line-height: 1.5;
+.profile-row--pressed {
+  opacity: 0.65;
 }
 
 .profile-row-label {
@@ -115,4 +213,87 @@ button.profile-row {
   font-size: 28rpx;
   font-weight: 700;
   line-height: 1.4;
+}
+
+.publication-expiry {
+  margin-top: 6rpx;
+  color: #536981;
+  font-size: 22rpx;
+}
+
+.publication-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12rpx;
+  margin-top: 16rpx;
+  padding-top: 8rpx;
+  border-top: 1rpx solid #e7edf4;
+}
+
+.publication-actions .publication-action {
+  display: flex;
+  flex: 0 0 88rpx;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 88rpx;
+  min-height: 64rpx;
+  margin: 0;
+  padding: 0 16rpx;
+  border-radius: 12rpx;
+  background: transparent;
+  color: #173d65;
+  font-size: 24rpx;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.publication-actions .publication-action--manage {
+  flex-basis: 112rpx;
+  width: 112rpx;
+  color: #536981;
+}
+
+@media (prefers-color-scheme: dark) {
+  .profile-card {
+    background: linear-gradient(125deg, #202c39, #293d50);
+  }
+
+  .profile-avatar {
+    background: #324359;
+    color: var(--dark-accent);
+  }
+
+  .profile-account-title,
+  .profile-row-label { color: var(--dark-text); }
+
+  .profile-note,
+  .profile-empty,
+  .profile-row,
+  .profile-avatar-arrow,
+  .publication-expiry { color: var(--dark-muted); }
+
+  .profile-empty navigator,
+  .publication-actions .publication-action { color: var(--dark-accent); }
+
+  .publication-actions .publication-action--manage { color: var(--dark-muted); }
+
+  .profile-row + .profile-row,
+  .publication-actions { border-color: var(--dark-border); }
+
+  .profile-account-card .profile-avatar-picker,
+  .profile-nickname-field .profile-nickname-input,
+  .profile-account-actions .profile-account-action {
+    background: var(--dark-inset);
+    border-color: var(--dark-border);
+    color: var(--dark-text);
+  }
+
+  .profile-account-card .profile-avatar-picker--pressed { background: var(--dark-pressed); }
+
+  .profile-account-actions .profile-account-save {
+    background: var(--dark-primary);
+    color: #fff;
+  }
 }
